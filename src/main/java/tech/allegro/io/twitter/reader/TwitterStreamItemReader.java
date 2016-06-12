@@ -9,6 +9,8 @@ import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
 import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemStreamException;
 import org.springframework.batch.item.ItemStreamReader;
@@ -23,6 +25,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TwitterStreamItemReader implements ItemStreamReader<Twitt> {
+    private static final Logger log = LoggerFactory.getLogger(TwitterStreamItemReader.class);
     private BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
     private Client client;
     private final TwitterAccessProperties accessProperties;
@@ -30,22 +33,20 @@ public class TwitterStreamItemReader implements ItemStreamReader<Twitt> {
     @Autowired
     public TwitterStreamItemReader(TwitterAccessProperties accessProperties) {
         this.accessProperties = accessProperties;
-        System.out.println(accessProperties.getAccessToken());
-        System.out.println(accessProperties.getAccessTokenSecret());
-        System.out.println(accessProperties.getConsumerKey());
-        System.out.println(accessProperties.getConsumerSecret());
     }
 
     @Override
     public Twitt read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(queue.take(), Twitt.class);
+        Twitt twitt = objectMapper.readValue(queue.take(), Twitt.class);
+        log.info("RECEIVED TWITT: " + twitt);
+        return twitt;
     }
 
     @Override
     public void open(ExecutionContext executionContext) throws ItemStreamException {
         StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
-        endpoint.trackTerms(Lists.newArrayList("snake"));
+        endpoint.trackTerms(Lists.newArrayList("snake USD"));
         Authentication auth = new OAuth1(accessProperties.getConsumerKey(),
                 accessProperties.getConsumerSecret(),
                 accessProperties.getAccessToken(),
