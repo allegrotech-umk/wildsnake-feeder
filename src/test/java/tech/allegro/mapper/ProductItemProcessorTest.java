@@ -4,9 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import tech.allegro.domain.Product;
 import tech.allegro.io.twitter.domain.Twitt;
-import tech.allegro.mapper.exception.ProcessingException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ProductItemProcessorTest {
     private ProductItemProcessor productItemProcessor;
@@ -43,21 +43,27 @@ public class ProductItemProcessorTest {
         assertEquals(result.getDescription(), "short twitt");
     }
 
-    @Test(expected = ProcessingException.class)
-    public void shouldThrowExceptionOnNullTwitt() throws Exception {
+    @Test
+    public void shouldSkipNullTwitt() throws Exception {
         // Given
         Twitt twitt = new Twitt(null);
 
         // When
-        productItemProcessor.process(twitt);
+        Product product = productItemProcessor.process(twitt);
+
+        // then
+        assertNull(product);
     }
 
-    @Test(expected = ProcessingException.class)
-    public void shouldThrowExceptionOnEmptyTwitt() throws Exception {
+    @Test
+    public void shouldSkipEmptyTwitt() throws Exception {
         // Given
         Twitt twitt = new Twitt("");
 
         // When
-        productItemProcessor.process(twitt);
+        Product product = productItemProcessor.process(twitt);
+
+        // then
+        assertNull(product);
     }
 }

@@ -1,29 +1,44 @@
 package tech.allegro.mapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import tech.allegro.domain.Product;
 import tech.allegro.io.twitter.domain.Twitt;
-import tech.allegro.mapper.exception.ProcessingException;
 
 import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class ProductItemProcessor implements ItemProcessor<Twitt, Product> {
     private final static String dummyUrl = "http://imageStatic/photo";
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductItemProcessor.class);
+
+    private final static Pattern usdPricePattern = Pattern.compile("USD ([0-9]+\\.?[0-9]*)");
+    private final static Pattern priceUsdPattern = Pattern.compile("(\\$*([0-9]+\\.?[0-9]*) USD)|(\\$([0-9]+\\.?[0-9]*)[ ]*(USD)*)");
     private final static int PRODUCT_NAME_BEGIN_INDEX = 0;
     private final static int PRODUCT_NAME_MAX_SIZE = 19;
 
     @Override
     public Product process(Twitt twitt) throws Exception {
-        if (twitt.getText() == null || twitt.getText().isEmpty()) {
-            throw new ProcessingException("Twitt was empty");
-        }
-        return new Product(
-                getName(twitt.getText()),
-                twitt.getText(),
-                dummyUrl,
-                BigDecimal.ONE
-        );
+        System.out.println(twitt.getText());
+        Product tmp = Optional
+                .of(twitt)
+                .filter(this::emptyTwitt)
+                .map(p -> new Product(
+                        getName(p.getText()),
+                        p.getText(),
+                        dummyUrl,
+                        BigDecimal.ONE
+                ))
+                .orElse(null);
+        return tmp;
+    }
+
+    private boolean emptyTwitt(Twitt twitt) {
+        return !Strings.isNullOrEmpty(twitt.getText());
     }
 
     private String getName(String text) {
