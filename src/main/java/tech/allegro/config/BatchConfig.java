@@ -81,7 +81,7 @@ public class BatchConfig {
     @Bean
     public Step consumeTwitterStream() {
         return stepBuilderFactory.get("consumeTwitterStream")
-                .<Twitt,Product>chunk(10)
+                .<Twitt,Product>chunk(1)
                 .reader(itemStreamReader)
                 .processor(processor())
                 .writer(writer())

@@ -3,10 +3,12 @@ package tech.allegro.domain;
 import java.math.BigDecimal;
 
 public class Product {
-    private final String name;
-    private final String description;
-    private final String image_url;
-    private final BigDecimal price;
+    private String name;
+    private String description;
+    private String image_url;
+    private BigDecimal price;
+
+    public Product() { }
 
     public Product(String name, String description, String image_url, BigDecimal price) {
         this.name = name;
