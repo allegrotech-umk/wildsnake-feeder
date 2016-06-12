@@ -1,0 +1,1 @@
+worker: java -jar build/libs/wildsnake-feeder-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod

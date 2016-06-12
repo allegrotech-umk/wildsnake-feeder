@@ -1,21 +1,21 @@
 package tech.allegro.io.twitter.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class TwitterAccessProperties {
-    @Value("${twitter.consumer.key}")
-    private String consumerKey;
 
-    @Value("${twitter.consumer.secret}")
-    private String consumerSecret;
+    private final String consumerKey;
+    private final String consumerSecret;
+    private final String accessToken;
+    private final String accessTokenSecret;
 
-    @Value("${twitter.access.token}")
-    private String accessToken;
-
-    @Value("${twitter.access.token.secret}")
-    private String accessTokenSecret;
+    public TwitterAccessProperties() {
+        this.consumerKey = System.getenv("TWITTER_CONSUMER_KEY");
+        this.consumerSecret= System.getenv("TWITTER_CONSUMER_SECRET");
+        this.accessToken = System.getenv("TWITTER_ACCESS_TOKEN");
+        this.accessTokenSecret = System.getenv("TWITTER_ACCESS_TOKEN_SECRET");
+    }
 
     public String getConsumerKey() {
         return consumerKey;
