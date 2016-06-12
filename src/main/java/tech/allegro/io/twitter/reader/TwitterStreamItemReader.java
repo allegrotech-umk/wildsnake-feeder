@@ -33,10 +33,6 @@ public class TwitterStreamItemReader implements ItemStreamReader<Twitt> {
     @Autowired
     public TwitterStreamItemReader(TwitterAccessProperties accessProperties) {
         this.accessProperties = accessProperties;
-        System.out.println(accessProperties.getAccessToken());
-        System.out.println(accessProperties.getAccessTokenSecret());
-        System.out.println(accessProperties.getConsumerKey());
-        System.out.println(accessProperties.getConsumerSecret());
     }
 
     @Override
