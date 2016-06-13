@@ -42,8 +42,7 @@ public class TestTwittItemReader implements ItemStreamReader<Twitt> {
 
     }
 
-    public void addStubTwitt(Twitt twitt) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        queue.add(objectMapper.writeValueAsString(twitt));
+    public void addStubTwitt(String twitt) throws JsonProcessingException {
+        queue.add(twitt);
     }
 }

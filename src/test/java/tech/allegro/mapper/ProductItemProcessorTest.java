@@ -4,9 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import tech.allegro.domain.Product;
 import tech.allegro.io.twitter.domain.Twitt;
-import tech.allegro.mapper.exception.ProcessingException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ProductItemProcessorTest {
     private ProductItemProcessor productItemProcessor;
@@ -20,44 +20,50 @@ public class ProductItemProcessorTest {
     @Test
     public void shouldProcessTwitt() throws Exception {
         // Given
-        Twitt twitt = new Twitt("texttexttexttexttexttexttexttexttexttext");
+        Twitt twitt = new Twitt("texttexttexttexttexttexttexttexttexttext 1 USD");
 
         // When
         Product result = productItemProcessor.process(twitt);
 
         // Then
         assertEquals(result.getName(), "texttexttexttexttex");
-        assertEquals(result.getDescription(), "texttexttexttexttexttexttexttexttexttext");
+        assertEquals(result.getDescription(), "texttexttexttexttexttexttexttexttexttext 1 USD");
     }
 
     @Test
     public void shouldProcessShortTwitt() throws Exception {
         // Given
-        Twitt twitt = new Twitt("short twitt");
+        Twitt twitt = new Twitt("short twitt 1 USD");
 
         // When
         Product result = productItemProcessor.process(twitt);
 
         // Then
-        assertEquals(result.getName(), "short twitt");
-        assertEquals(result.getDescription(), "short twitt");
+        assertEquals(result.getName(), "short twitt 1 USD");
+        assertEquals(result.getDescription(), "short twitt 1 USD");
     }
 
-    @Test(expected = ProcessingException.class)
-    public void shouldThrowExceptionOnNullTwitt() throws Exception {
+    @Test
+    public void shouldSkipNullTwitt() throws Exception {
         // Given
         Twitt twitt = new Twitt(null);
 
         // When
-        productItemProcessor.process(twitt);
+        Product product = productItemProcessor.process(twitt);
+
+        // then
+        assertNull(product);
     }
 
-    @Test(expected = ProcessingException.class)
-    public void shouldThrowExceptionOnEmptyTwitt() throws Exception {
+    @Test
+    public void shouldSkipEmptyTwitt() throws Exception {
         // Given
         Twitt twitt = new Twitt("");
 
         // When
-        productItemProcessor.process(twitt);
+        Product product = productItemProcessor.process(twitt);
+
+        // then
+        assertNull(product);
     }
 }
