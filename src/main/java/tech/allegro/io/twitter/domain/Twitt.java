@@ -8,19 +8,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Twitt {
     private final String text;
 
+    private final Entities entities;
+
     @JsonCreator
-    public Twitt(@JsonProperty("text") String text) {
+    public Twitt(@JsonProperty("text") String text, @JsonProperty("entities") Entities entities) {
         this.text = text;
+        this.entities = entities;
     }
 
     public String getText() {
         return text;
     }
 
+    public Entities getEntities() {
+        return entities;
+    }
+
     @Override
     public String toString() {
         return "Twitt{" +
                 "text='" + text + '\'' +
+                ", entities=" + entities +
                 '}';
     }
 }

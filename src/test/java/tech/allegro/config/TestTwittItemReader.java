@@ -43,6 +43,6 @@ public class TestTwittItemReader implements ItemStreamReader<Twitt> {
     }
 
     public void addStubTwitt(String twitt) throws JsonProcessingException {
-        queue.add(twitt);
+        queue.add(twitt );
     }
 }

@@ -3,10 +3,13 @@ package tech.allegro.mapper;
 import org.junit.Before;
 import org.junit.Test;
 import tech.allegro.domain.Product;
+import tech.allegro.io.twitter.domain.Entities;
+import tech.allegro.io.twitter.domain.Media;
 import tech.allegro.io.twitter.domain.Twitt;
-import tech.allegro.mapper.exception.ProcessingException;
 
-import static org.junit.Assert.*;
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
 
 public class ProductItemProcessorTest {
     private ProductItemProcessor productItemProcessor;
@@ -20,7 +23,7 @@ public class ProductItemProcessorTest {
     @Test
     public void shouldProcessTwitt() throws Exception {
         // Given
-        Twitt twitt = new Twitt("texttexttexttexttexttexttexttexttexttext");
+        Twitt twitt = new Twitt("texttexttexttexttexttexttexttexttexttext", new Entities(Arrays.asList(new Media("url","url"))) );
 
         // When
         Product result = productItemProcessor.process(twitt);
@@ -33,7 +36,7 @@ public class ProductItemProcessorTest {
     @Test
     public void shouldProcessShortTwitt() throws Exception {
         // Given
-        Twitt twitt = new Twitt("short twitt");
+        Twitt twitt = new Twitt("short twitt", new Entities(Arrays.asList(new Media("url","url"))));
 
         // When
         Product result = productItemProcessor.process(twitt);
@@ -43,19 +46,19 @@ public class ProductItemProcessorTest {
         assertEquals(result.getDescription(), "short twitt");
     }
 
-    @Test(expected = ProcessingException.class)
+    @Test
     public void shouldThrowExceptionOnNullTwitt() throws Exception {
         // Given
-        Twitt twitt = new Twitt(null);
+        Twitt twitt = new Twitt(null, new Entities(Arrays.asList(new Media("url","url"))));
 
         // When
         productItemProcessor.process(twitt);
     }
 
-    @Test(expected = ProcessingException.class)
+    @Test
     public void shouldThrowExceptionOnEmptyTwitt() throws Exception {
         // Given
-        Twitt twitt = new Twitt("");
+        Twitt twitt = new Twitt("", new Entities(Arrays.asList(new Media("url","url"))));
 
         // When
         productItemProcessor.process(twitt);
