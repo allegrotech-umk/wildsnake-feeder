@@ -20,27 +20,27 @@ public class ProductItemProcessorTest {
     @Test
     public void shouldProcessTwitt() throws Exception {
         // Given
-        Twitt twitt = new Twitt("texttexttexttexttexttexttexttexttexttext");
+        Twitt twitt = new Twitt("texttexttexttexttexttexttexttexttexttext 1 USD");
 
         // When
         Product result = productItemProcessor.process(twitt);
 
         // Then
         assertEquals(result.getName(), "texttexttexttexttex");
-        assertEquals(result.getDescription(), "texttexttexttexttexttexttexttexttexttext");
+        assertEquals(result.getDescription(), "texttexttexttexttexttexttexttexttexttext 1 USD");
     }
 
     @Test
     public void shouldProcessShortTwitt() throws Exception {
         // Given
-        Twitt twitt = new Twitt("short twitt");
+        Twitt twitt = new Twitt("short twitt 1 USD");
 
         // When
         Product result = productItemProcessor.process(twitt);
 
         // Then
-        assertEquals(result.getName(), "short twitt");
-        assertEquals(result.getDescription(), "short twitt");
+        assertEquals(result.getName(), "short twitt 1 USD");
+        assertEquals(result.getDescription(), "short twitt 1 USD");
     }
 
     @Test
