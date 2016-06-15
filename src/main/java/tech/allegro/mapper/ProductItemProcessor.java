@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 public class ProductItemProcessor implements ItemProcessor<Twitt, Product> {
-    private final static String dummyUrl = "http://imageStatic/photo";
     private final static int PRODUCT_NAME_BEGIN_INDEX = 0;
     private final static int PRODUCT_NAME_MAX_SIZE = 19;
 
@@ -28,8 +27,6 @@ public class ProductItemProcessor implements ItemProcessor<Twitt, Product> {
                         BigDecimal.ONE
                 ))
                 .orElse(null);
-
-
     }
 
     private boolean nonEmptyText(Twitt twitt) {
@@ -51,7 +48,7 @@ public class ProductItemProcessor implements ItemProcessor<Twitt, Product> {
     }
 
     private String retriveUrlFromTwitt(Media media){
-        if( media.getMedia_url_https() != null && !"".equals(media.getMedia_url_https())) return media.getMedia_url_https();
+        if( !Strings.isNullOrEmpty(media.getMedia_url_https())) return media.getMedia_url_https();
 
         return media.getMedia_url();
     }
